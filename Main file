@@ -1,0 +1,190 @@
+include <iostream> 
+#include <string>  
+
+/* 
+
+Customer Support Ticket System using a linked list-based queue. 
+The system allows the user to manage customer support tickets efficiently. 
+
+The following operations are supported: 
+Add a ticket: Add a new support ticket to the end of the queue. Each ticket should have a unique ID, 
+customer name, and issue description.
+Serve a ticket: Remove the ticket at the front of the queue and display its details as "being served."
+Peek next ticket: Display the details of the next ticket to be served without removing it from the queue.
+Display all tickets: Display all tickets currently in the queue, in the order they will be served.
+
+*/
+
+struct Node { 
+    std:: string name;
+    std:: string issue; 
+    std:: string ID; 
+
+    
+    Node* next; 
+
+    Node(std::string name, std::string issue, std:: string ID) { 
+        this->name = name; 
+        this->issue = issue; 
+        this->ID = ID; 
+        this->next = nullptr; 
+    }
+
+    
+    void printNode() {
+        std::cout << "Ticket ID: " << ID << ", Customer Name: " << name << ", Issue: " << issue << std::endl; 
+    }
+
+};
+
+class Queue { 
+    public: 
+        Node* head; 
+
+        //constructor for linked list class
+        Queue(): head(nullptr) {} 
+
+        ~Queue() { 
+            while (head != nullptr) {
+                deleteHead(); 
+            } 
+        }
+
+        void deleteHead() { 
+            if (head == nullptr) { 
+                std::cout << "There are no pending tickets" << std::endl;
+                return; 
+            }
+
+            Node* temp = head; 
+            head = head->next; 
+            delete temp; 
+        }
+
+    
+
+
+    void enqueue() { 
+        std::string name, issue, ID; 
+
+        
+        std::cout <<"Enter ID: ";
+        getline(std::cin, ID);
+
+        std::cout << "Enter Name: "; 
+        getline(std::cin, name);
+
+        std::cout << "Enter Issue: "; 
+        getline(std::cin,issue); 
+
+        
+        Node* newNode = new Node(name, issue, ID); 
+        newNode->next = nullptr;
+
+        //Checks if there is a head if not a head is assigned 
+        if (head == nullptr) { 
+           head = newNode; 
+        } 
+        else {  // Starts at the end and stops when the current of the next is hit 
+           Node* current = head; 
+           while (current->next != nullptr) { 
+               current = current->next; 
+           } 
+            //Current 
+           current->next = newNode; 
+        }
+
+        std::cout << "Ticket added succesfully.\n" << std::endl;
+     };
+
+
+
+    void dequeue() { 
+      Node* temp = head; 
+
+
+      //if list is empty 
+     if (head == nullptr) { 
+        std::cout << "There are no pending tickets to dequeue" << std::endl;
+        return; 
+     }
+     //if there is only one node in the list 
+     if (head->next == nullptr) { 
+        head->printNode(); 
+        delete head; 
+        head = nullptr;
+        return;
+     }
+    
+    head->printNode();
+    head = head->next; 
+    delete temp; 
+
+     } 
+
+    void peek() { 
+        if (head == nullptr) { 
+            std::cout << "There are no pending tickets" << std::endl; 
+            return;
+        }
+        head->printNode();
+    }
+
+
+    void printAll() { 
+        Node* current = head; 
+          
+           if (head == nullptr) {
+               std::cout << "No pending tickets" << std::endl; 
+               return; 
+           }
+
+           std::cout << "All pending tickets" << std::endl; 
+           while (current != nullptr) { 
+               current->printNode(); 
+               current = current->next; 
+           } 
+           std::cout << " " << std::endl; 
+    }
+};
+
+int main() {
+    int user_choice = 0; 
+    Queue q;
+
+    while (true) { 
+        std::cout << "\n";
+        std:: cout << "  --- Customer Support Ticket System ---  " << std::endl; 
+        std:: cout << " 1. Add a Ticket " <<  std::endl; 
+        std:: cout << " 2. Serve a Ticket " <<  std::endl;
+        std:: cout << " 3. Peek Next Ticket " <<  std::endl; 
+        std:: cout << " 4. Display All Tickets " <<  std::endl; 
+        std:: cout << " 5. Exit " << std::endl; 
+
+        std:: cout << "Enter your choice: ";
+        std::cin >> user_choice; 
+        std::cin.ignore(); 
+
+        switch (user_choice) {
+            case 1: 
+                q.enqueue();
+                break; 
+            case 2:
+                q.dequeue();
+                break; 
+            case 3: 
+                q.peek();
+                break;
+            case 4: 
+                q.printAll();
+                break;
+            case 5: 
+                std::cout << "Exiting program\n" << std::endl; 
+                return 0; 
+            default: 
+                std::cout << "No valid code given" << std::endl;
+        }
+   
+    }
+    return 0;
+} 
